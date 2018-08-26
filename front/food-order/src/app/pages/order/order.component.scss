@@ -1,0 +1,34 @@
+.order-page {
+  padding: 10px;
+  height: 90%;
+  overflow: auto;
+
+  table {
+    width: 100%;
+    height: 200px;
+
+    .mat-column-order {
+      width: 131px;
+    }
+
+    .mat-column-price {
+      width: 131px;
+    }
+  }
+
+  tr.mat-footer-row {
+    font-weight: bold;
+  }
+
+  .order-counter {
+    .counter-form {
+      width: 30px;
+      margin: 0 10px;
+    }
+
+    .button-content {
+      font-size: 40px;
+    }
+  }
+}
+
