@@ -78,3 +78,8 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+
+//Polyfill for socket.io
+//For more details see https://github.com/socketio/socket.io-client/issues/1166#issuecomment-386195105
+(window as any).global = window;

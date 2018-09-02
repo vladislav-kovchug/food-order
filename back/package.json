@@ -1,0 +1,22 @@
+{
+  "name": "food-order-server",
+  "version": "0.0.1",
+  "description": "Food Order Server",
+  "dependencies": {
+    "@types/express": "^4.16.0",
+    "@types/socket.io": "^1.4.38",
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^10.9.2",
+    "nodemon": "^1.18.3",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.1"
+  },
+  "scripts": {
+    "run": "ts-node ./src/index.ts",
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/application.ts"
+  }
+}

@@ -1,4 +1,6 @@
 <div class="order-page">
+  <button mat-raised-button color="primary" (click)="finishOrder()">Click me</button>
+
   <table mat-table [dataSource]="foodItems" class="mat-elevation-z8">
     <!-- Item Column -->
     <ng-container matColumnDef="name">
@@ -19,11 +21,11 @@
       <td mat-cell *matCellDef="let item">
 
         <div class="order-counter">
-          <button mat-mini-fab><span class="button-content" (click)="decrement(item)">-</span></button>
+          <button mat-mini-fab (click)="decrement(item)"><span class="button-content">-</span></button>
           <mat-form-field class="counter-form">
             <input class="counter-input" readonly type="number" matInput placeholder="Count" [value]="item.count">
           </mat-form-field>
-          <button mat-mini-fab><span class="button-content" (click)="increment(item)">+</span></button>
+          <button mat-mini-fab (click)="increment(item)"><span class="button-content">+</span></button>
         </div>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>

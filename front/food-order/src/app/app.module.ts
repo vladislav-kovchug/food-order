@@ -25,6 +25,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { OrderComponent } from './pages/order/order.component';
 import { HistoryComponent } from './pages/history/history.component';
 import {FormsModule} from "@angular/forms";
+import {AngularFireModule} from "angularfire2";
+import {environment} from "../environments/environment";
+import {AngularFireDatabaseModule} from "angularfire2/database";
 
 const appRoutes: Routes = [
   { path: 'new-order', component: OrderComponent },
@@ -58,6 +61,8 @@ const appRoutes: Routes = [
     MatInputModule,
     FormsModule,
     RouterModule.forRoot(appRoutes),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule, // for database
   ],
   providers: [],
   bootstrap: [AppComponent]

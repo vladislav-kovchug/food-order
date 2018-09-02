@@ -1,10 +1,12 @@
 export class FoodItem {
-  public readonly price: number;
-  public readonly name: string;
-  public readonly count: number;
+  public id: number;
+  public price: number;
+  public name: string;
+  public count: number;
 
 
-  constructor(price: number, name: string, count: number) {
+  constructor(id: number, price: number, name: string, count: number) {
+    this.id = id;
     this.price = price;
     this.name = name;
     this.count = count;
