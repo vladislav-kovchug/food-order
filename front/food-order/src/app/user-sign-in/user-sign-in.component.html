@@ -1,0 +1,20 @@
+<div class="user-sign-in">
+
+  <div *ngIf="user" class="component-item">
+    <button mat-raised-button color="primary" (click)="signOut()">Sign Out</button>
+  </div>
+
+  <div *ngIf="!user" class="component-item">
+    <button mat-raised-button color="primary" (click)="signIn()">Sign In</button>
+  </div>
+
+  <div class="component-item">
+    <span *ngIf="user">
+      {{ user.displayName }}
+    </span>
+  </div>
+  <div class="component-item">
+    <img class="user-image" *ngIf="user && user.photoURL" src="{{user.photoURL}}">
+  </div>
+
+</div>
