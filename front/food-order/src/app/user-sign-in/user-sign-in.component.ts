@@ -19,7 +19,8 @@ export class UserSignInComponent implements OnInit {
         this.user = firebaseUser;
         this.fireDb.database.ref("/users/" + firebaseUser.uid).update({
           "name": firebaseUser.displayName,
-          "email": firebaseUser.email
+          "email": firebaseUser.email,
+          "photoUrl": firebaseUser.photoURL
         });
       }
     });

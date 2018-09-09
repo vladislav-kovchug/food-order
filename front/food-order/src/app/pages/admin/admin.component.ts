@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AngularFireAuth} from "angularfire2/auth";
 import {AngularFireDatabase} from "angularfire2/database";
 import {User} from "firebase";
+import {UserData} from "../../model/user-data";
 
 export interface TeamUser {
   uid: string;
@@ -18,7 +19,7 @@ export interface TeamUser {
 export class AdminComponent implements OnInit {
 
   activeUser: User;
-  users: Object[] = [];
+  users: UserData[] = [];
   displayedColumns: string[] = ['name', 'email', 'toggle'];
 
   constructor(fireAuth: AngularFireAuth, private fireDb: AngularFireDatabase) {
@@ -40,8 +41,8 @@ export class AdminComponent implements OnInit {
   }
 
   public test() {
-    // this.fireDb.database.ref("/users/" + this.activeUser.uid + "/teamManager").set(true);
-    // this.fireDb.database.ref("/users/" + this.activeUser.uid + "/teamManager").set(false);
+    // this.fireDb.database.ref("/users/" + this.activeUser.uid + "/moderator").set(true);
+    // this.fireDb.database.ref("/users/" + this.activeUser.uid + "/moderator").set(false);
     // this.fireDb.database.ref("/users/" + this.activeUser.uid).set({
     //   "updatedName": "New Name",
     //   "email": "new Email"
