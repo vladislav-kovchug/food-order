@@ -1,0 +1,35 @@
+<div class="admin-page">
+  <div *ngIf="!activeUser">
+    Please Sign In.
+  </div>
+
+  <div *ngIf="activeUser">
+
+    <button mat-raised-button color="primary" (click)="test()">Test</button>
+
+    <table mat-table [dataSource]="users" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name</th>
+        <td mat-cell *matCellDef="let user"> {{user.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email</th>
+        <td mat-cell *matCellDef="let user"> {{user.email}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="toggle">
+        <th mat-header-cell *matHeaderCellDef> Order</th>
+        <td mat-cell *matCellDef="let user">
+          <span>
+            <mat-slide-toggle (change)="onToggle(user, $event)"></mat-slide-toggle>
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+  </div>
+</div>

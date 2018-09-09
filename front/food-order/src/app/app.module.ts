@@ -14,7 +14,7 @@ import {
   MatListModule,
   MatMenuModule,
   MatPaginatorModule,
-  MatSidenavModule,
+  MatSidenavModule, MatSlideToggle, MatSlideToggleModule,
   MatSortModule,
   MatTableModule,
   MatToolbarModule
@@ -31,10 +31,12 @@ import {AuthServiceConfig, GoogleLoginProvider} from "angular-6-social-login";
 import {SocialLoginModule} from 'angular-6-social-login';
 import { UserSignInComponent } from './user-sign-in/user-sign-in.component';
 import {AngularFireAuthModule} from "angularfire2/auth";
+import { AdminComponent } from './pages/admin/admin.component';
 
 const appRoutes: Routes = [
   { path: 'new-order', component: OrderComponent },
   { path: 'history', component: HistoryComponent },
+  { path: 'admin', component: AdminComponent },
 ];
 
 export function getAuthServiceConfigs() {
@@ -57,7 +59,8 @@ export function getAuthServiceConfigs() {
     DashboardComponent,
     OrderComponent,
     HistoryComponent,
-    UserSignInComponent
+    UserSignInComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +78,7 @@ export function getAuthServiceConfigs() {
     MatPaginatorModule,
     MatSortModule,
     MatInputModule,
+    MatSlideToggleModule,
     FormsModule,
     RouterModule.forRoot(appRoutes),
     AngularFireModule.initializeApp(environment.firebase),
