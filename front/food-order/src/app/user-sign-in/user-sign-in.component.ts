@@ -3,6 +3,7 @@ import {AngularFireAuth} from "angularfire2/auth";
 import * as firebase from "firebase";
 import {User} from "firebase";
 import {AngularFireDatabase} from "angularfire2/database";
+import {UserData} from "../model/user-data";
 
 @Component({
   selector: 'app-user-sign-in',
@@ -17,11 +18,8 @@ export class UserSignInComponent implements OnInit {
       console.log("Firebase user", firebaseUser);
       if(firebaseUser) {
         this.user = firebaseUser;
-        this.fireDb.database.ref("/users/" + firebaseUser.uid).update({
-          "name": firebaseUser.displayName,
-          "email": firebaseUser.email,
-          "photoUrl": firebaseUser.photoURL
-        });
+        let userData = new UserData(firebaseUser.displayName, firebaseUser.email, firebaseUser.photoURL);
+        this.fireDb.database.ref("/users/" + firebaseUser.uid).update(userData);
       }
     });
 
