@@ -32,11 +32,13 @@ import { UserSignInComponent } from './user-sign-in/user-sign-in.component';
 import {AngularFireAuthModule} from "angularfire2/auth";
 import { AdminComponent } from './pages/admin/admin.component';
 import { ProceedOrderComponent } from './pages/order/proceed-order/proceed-order.component';
+import { MenuComponent } from './pages/menu/menu.component';
 
 const appRoutes: Routes = [
   { path: 'new-order', component: OrderComponent },
   { path: 'history', component: HistoryComponent },
   { path: 'admin', component: AdminComponent },
+  { path: 'menu', component: MenuComponent },
 ];
 
 export function getAuthServiceConfigs() {
@@ -60,7 +62,8 @@ export function getAuthServiceConfigs() {
     HistoryComponent,
     UserSignInComponent,
     AdminComponent,
-    ProceedOrderComponent
+    ProceedOrderComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
