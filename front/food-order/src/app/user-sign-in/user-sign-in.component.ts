@@ -18,7 +18,7 @@ export class UserSignInComponent implements OnInit {
       console.log("Firebase user", firebaseUser);
       if(firebaseUser) {
         this.user = firebaseUser;
-        let userData = new UserData(firebaseUser.displayName, firebaseUser.email, firebaseUser.photoURL);
+        let userData = new UserData(firebaseUser.email, firebaseUser.displayName, firebaseUser.photoURL);
         this.fireDb.database.ref("/users/" + firebaseUser.uid).update(userData);
       }
     });
