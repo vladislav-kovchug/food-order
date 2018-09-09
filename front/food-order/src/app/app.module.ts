@@ -19,7 +19,6 @@ import {
   MatTableModule,
   MatToolbarModule
 } from '@angular/material';
-import {DashboardComponent} from './dashboard/dashboard.component';
 import {RouterModule, Routes} from '@angular/router';
 import {OrderComponent} from './pages/order/order.component';
 import {HistoryComponent} from './pages/history/history.component';
@@ -57,7 +56,6 @@ export function getAuthServiceConfigs() {
   declarations: [
     AppComponent,
     NavigationComponent,
-    DashboardComponent,
     OrderComponent,
     HistoryComponent,
     UserSignInComponent,
