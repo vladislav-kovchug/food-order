@@ -7,7 +7,7 @@ import {NavigationComponent} from './navigation/navigation.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {
   MatButtonModule,
-  MatCardModule,
+  MatCardModule, MatDialogModule,
   MatGridListModule,
   MatIconModule,
   MatInputModule,
@@ -32,6 +32,7 @@ import {SocialLoginModule} from 'angular-6-social-login';
 import { UserSignInComponent } from './user-sign-in/user-sign-in.component';
 import {AngularFireAuthModule} from "angularfire2/auth";
 import { AdminComponent } from './pages/admin/admin.component';
+import { ProceedOrderComponent } from './pages/order/proceed-order/proceed-order.component';
 
 const appRoutes: Routes = [
   { path: 'new-order', component: OrderComponent },
@@ -60,7 +61,8 @@ export function getAuthServiceConfigs() {
     OrderComponent,
     HistoryComponent,
     UserSignInComponent,
-    AdminComponent
+    AdminComponent,
+    ProceedOrderComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +86,11 @@ export function getAuthServiceConfigs() {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule, // for database,
     AngularFireAuthModule,
-    SocialLoginModule
+    SocialLoginModule,
+    MatDialogModule
+  ],
+  entryComponents: [
+    ProceedOrderComponent
   ],
   providers: [{
     provide: AuthServiceConfig,
