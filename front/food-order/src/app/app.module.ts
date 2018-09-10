@@ -7,7 +7,7 @@ import {NavigationComponent} from './navigation/navigation.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {
   MatButtonModule,
-  MatCardModule, MatDialogModule,
+  MatCardModule, MatDialogModule, MatExpansionModule,
   MatGridListModule,
   MatIconModule,
   MatInputModule,
@@ -33,6 +33,7 @@ import {AngularFireAuthModule} from "angularfire2/auth";
 import { AdminComponent } from './pages/admin/admin.component';
 import { ProceedOrderComponent } from './pages/order/proceed-order/proceed-order.component';
 import { MenuComponent } from './pages/menu/menu.component';
+import { OrderViewComponent } from './order-view/order-view.component';
 
 const appRoutes: Routes = [
   { path: 'new-order', component: OrderComponent },
@@ -63,7 +64,8 @@ export function getAuthServiceConfigs() {
     UserSignInComponent,
     AdminComponent,
     ProceedOrderComponent,
-    MenuComponent
+    MenuComponent,
+    OrderViewComponent
   ],
   imports: [
     BrowserModule,
@@ -88,7 +90,8 @@ export function getAuthServiceConfigs() {
     AngularFireDatabaseModule, // for database,
     AngularFireAuthModule,
     SocialLoginModule,
-    MatDialogModule
+    MatDialogModule,
+    MatExpansionModule
   ],
   entryComponents: [
     ProceedOrderComponent

@@ -1,3 +1,15 @@
-<p>
-  history works!
-</p>
+<div class="history-component">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let item of history"
+                         (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="history-title">
+          {{item.date | date:'fullDate'}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-order-view [order]="item.order" [users]="users"></app-order-view>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
