@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Order} from "../model/order";
 import {UserData} from "../model/user-data";
 import {OrderItem} from "../model/order-item";
+import {GroupOrder} from "../model/group-order";
+import {UserGroup} from "../model/user-group";
 
 @Component({
   selector: 'app-order-view',
@@ -9,8 +10,8 @@ import {OrderItem} from "../model/order-item";
   styleUrls: ['./order-view.component.scss']
 })
 export class OrderViewComponent implements OnInit {
-  private _groupOrder: { [userId: string]: Order };
-  private _users: { [userId: string]: UserData };
+  private _groupOrder: GroupOrder;
+  private _users: UserGroup;
   orders: {
     user: UserData,
     items: OrderItem[],
@@ -23,13 +24,13 @@ export class OrderViewComponent implements OnInit {
   }
 
   @Input("order")
-  set order(groupOrder: { [userId: string]: Order }) {
+  set order(groupOrder: GroupOrder) {
     this._groupOrder = groupOrder;
     this.updateOrders();
   }
 
   @Input("users")
-  set users(users: { [userId: string]: UserData }) {
+  set users(users: UserGroup) {
     this._users = users;
     this.updateOrders();
   }

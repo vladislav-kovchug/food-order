@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AngularFireDatabase} from "angularfire2/database";
-import {UserData} from "../../model/user-data";
-import {Order} from "../../model/order";
+import {GroupOrder} from "../../model/group-order";
+import {UserGroup} from "../../model/user-group";
 
 @Component({
   selector: 'app-history',
@@ -12,9 +12,9 @@ export class HistoryComponent implements OnInit {
   history: {
     date: Date,
     ordersCount: number,
-    order: { [userId: string]: Order }
+    order: GroupOrder
   }[] = [];
-  users: { [userId: string]: UserData };
+  users: UserGroup;
 
   constructor(private fireDb: AngularFireDatabase) {
     this.fireDb.database.ref("/users").once("value", (snapshot) => {

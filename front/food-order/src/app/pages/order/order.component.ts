@@ -3,13 +3,13 @@ import {AngularFireDatabase} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {Subscription} from "rxjs/Subscription";
 import {User} from "firebase";
-import {Order} from "../../model/order";
 import {MatDialog} from "@angular/material";
 import {ProceedOrderComponent} from "./proceed-order/proceed-order.component";
-import {UserData} from "../../model/user-data";
 import {Promise} from "q";
 import {MenuCategory} from "../../model/menu-category";
 import {MenuItem} from "../../model/menu-item";
+import {GroupOrder} from "../../model/group-order";
+import {UserGroup} from "../../model/user-group";
 import Reference = firebase.database.Reference;
 
 @Component({
@@ -22,8 +22,8 @@ export class OrderComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'weight', 'price', 'order'];
   menu: MenuCategory[] = [];
   subscriptions: Subscription[] = [];
-  activeOrder: { [userId: string]: Order } = {};
-  users: { [userId: string]: UserData } = {};
+  activeOrder: GroupOrder = {};
+  users: UserGroup = {};
   orderComments: string;
 
   constructor(private firedb: AngularFireDatabase, private fireAuth: AngularFireAuth, private dialog: MatDialog,

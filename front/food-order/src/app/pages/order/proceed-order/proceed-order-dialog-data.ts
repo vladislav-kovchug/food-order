@@ -1,7 +1,7 @@
-import {Order} from "../../../model/order";
-import {UserData} from "../../../model/user-data";
+import {GroupOrder} from "../../../model/group-order";
+import {UserGroup} from "../../../model/user-group";
 
 export interface ProceedOrderDialogData {
-  activeOrder: { [userId: string]: Order };
-  users: { [userId: string]: UserData };
+  activeOrder: GroupOrder;
+  users: UserGroup;
 }
