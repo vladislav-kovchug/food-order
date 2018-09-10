@@ -20,7 +20,7 @@ import Reference = firebase.database.Reference;
 export class OrderComponent implements OnInit, OnDestroy {
   activeUser: User;
   displayedColumns: string[] = ['name', 'weight', 'price', 'order'];
-  menu: MenuCategory<MenuItem>[] = [];
+  menu: MenuCategory[] = [];
   subscriptions: Subscription[] = [];
   activeOrder: { [userId: string]: Order } = {};
   users: { [userId: string]: UserData } = {};

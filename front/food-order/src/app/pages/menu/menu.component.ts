@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {User} from "firebase";
 import {AngularFireDatabase} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
@@ -10,7 +10,7 @@ import {MenuCategory} from "../../model/menu-category";
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, AfterViewInit {
   @ViewChild('fileUploadInput') fileUploadInput: ElementRef;
   @ViewChild('divdiv') divdiv: ElementRef;
 
@@ -60,7 +60,6 @@ export class MenuComponent implements OnInit {
       });
 
       if (menuItems.length) {
-        // this.menuItems.
         menu.push(new MenuCategory(key, menuItems));
       }
     });
