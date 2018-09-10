@@ -53,8 +53,13 @@
         </mat-form-field>
 
         <button [disabled]="isMyOrderFinished() || !hasItemsInMyOrder()" class="toolbar-btn" mat-raised-button
-                color="primary" (click)="finishOrder()">Finish Your Order
+                color="primary" (click)="finishOrder()">Finish My Order
         </button>
+
+        <button [disabled]="isMyOrderFinished() || !hasItemsInMyOrder()" class="toolbar-btn" mat-raised-button
+                color="warn" (click)="cancelOrder()">Cancel My Order
+        </button>
+
         <button class="toolbar-btn" mat-raised-button color="primary" (click)="showProceedDialog()">Proceed Group Order
         </button>
       </div>

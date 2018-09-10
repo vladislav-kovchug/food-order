@@ -64,7 +64,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   public getMenuItemOrdersCount(item: MenuItem) {
     let myOrder = this.activeOrder[this.activeUser.uid];
-    if (!myOrder) {
+    if (!myOrder || !myOrder.items) {
       return 0;
     }
     let orderItem = myOrder.items[item.id];
@@ -79,11 +79,15 @@ export class OrderComponent implements OnInit, OnDestroy {
     if (this.activeUser && this.activeOrder[this.activeUser.uid]) {
       this.getActiveOrderRef().child("/" + this.activeUser.uid).update({
         finished: true,
-        comments: this.orderComments,
+        comments: this.orderComments || null,
       });
       this.activeOrder[this.activeUser.uid].finished = true;
       this.activeOrder[this.activeUser.uid].comments = this.orderComments;
     }
+  }
+
+  public cancelOrder() {
+    this.getActiveOrderRef().child("/" + this.activeUser.uid).remove();
   }
 
   public isMyOrderFinished() {
