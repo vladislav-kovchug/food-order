@@ -3,27 +3,7 @@
   <mat-dialog-content>
     <div>Phone to: +38(097)-566-02-24</div>
 
-    <mat-list role="list">
-      <div class="order-container" *ngFor="let order of orders">
-        <h3 mat-subheader>
-          <!--<span class="status-indicator">-->
-          <!--<mat-icon *ngIf="order.finished" class="done-icon"-->
-          <!--aria-label="In Progress">done</mat-icon>-->
-          <!--<mat-icon *ngIf="!order.finished" class="in-progress-icon" aria-label="In Progress">fiber_manual_record</mat-icon>-->
-          <!--</span>-->
-          <img class="avatar-img-small" src="{{ order.user.photoUrl }}">
-          <span>{{ order.user.name }}</span>
-        </h3>
-        <mat-list-item *ngFor="let item of order.items" role="listitem"><b>{{item.count}}x &nbsp;</b> {{ item.name }}</mat-list-item>
-        <mat-list-item *ngIf="order.comments" role="listitem">
-          <span><b>Comment:</b> {{ order.comments }}</span>
-        </mat-list-item>
-        <mat-list-item role="listitem"><b>Total Cost: {{ order.totalCost }}</b></mat-list-item>
-        <mat-divider></mat-divider>
-      </div>
-    </mat-list>
-
-    <!--<div> {{ dialogData | json }}</div>-->
+    <app-order-view [order]="dialogData.activeOrder" [users]="dialogData.users"></app-order-view>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close>Ok</button>
