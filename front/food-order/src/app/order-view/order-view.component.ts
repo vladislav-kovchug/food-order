@@ -23,13 +23,13 @@ export class OrderViewComponent implements OnInit {
   }
 
   @Input("order")
-  set order2(groupOrder: { [userId: string]: Order }) {
+  set order(groupOrder: { [userId: string]: Order }) {
     this._groupOrder = groupOrder;
     this.updateOrders();
   }
 
   @Input("users")
-  set users2(users: { [userId: string]: UserData }) {
+  set users(users: { [userId: string]: UserData }) {
     this._users = users;
     this.updateOrders();
   }
