@@ -126,7 +126,8 @@ export class MenuComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     let nativeElement: Element = this.fileUploadInput.nativeElement;
     nativeElement.addEventListener("change", (event) => {
-      let files = event.target.files;
+      let target: any = event.target; // specify target type for compiler
+      let files = target.files;
       if (files.length) {
         let file = files[0];
         let reader = new FileReader();
