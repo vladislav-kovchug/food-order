@@ -18,6 +18,10 @@
     .comment-field {
       width: 100%;
     }
+
+    .group-order-btn {
+      float: right;
+    }
   }
 
   .table-holder {
@@ -55,6 +59,7 @@
     width: calc(30% - 60px);
     vertical-align: top;
     margin-left: 10px;
+    margin-top: 19px;
     //height: calc(100% - 103px);
 
     .avatar-img-small {
