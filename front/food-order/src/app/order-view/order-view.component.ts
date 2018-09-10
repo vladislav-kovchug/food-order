@@ -16,6 +16,7 @@ export class OrderViewComponent implements OnInit {
     user: UserData,
     items: OrderItem[],
     totalCost: number,
+    totalCostDetails: string,
     comments: string
   }[] = [];
 
@@ -50,16 +51,25 @@ export class OrderViewComponent implements OnInit {
       let comments = this._groupOrder[key].comments;
       let items: OrderItem[] = [];
       let totalCost = 0;
+      let totalCostDetails = "";
       Object.keys(this._groupOrder[key].items).forEach((itemKey) => {
         let orderItem = this._groupOrder[key].items[itemKey];
-        totalCost += orderItem.price;
+        totalCost += orderItem.price * orderItem.count;
+        if (totalCostDetails) {
+          totalCostDetails += " + "
+        }
+        totalCostDetails += "(" + orderItem.count + "*" + orderItem.price + ")";
         items.push(orderItem);
       });
+      if (totalCostDetails) {
+        totalCostDetails += " = " + totalCost
+      }
 
       this.orders.push({
         user: user,
         items: items,
         totalCost: totalCost,
+        totalCostDetails: totalCostDetails,
         comments: comments
       })
     });
