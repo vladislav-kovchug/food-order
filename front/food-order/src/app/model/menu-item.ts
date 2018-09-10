@@ -1,11 +1,14 @@
 export class MenuItem {
   public id: number;
-  public price: number;
   public name: string;
+  public weight: number;
+  public price: number;
 
-  constructor(id: number, price: number, name: string) {
+
+  constructor(id: number, name: string, weight: number, price: number) {
     this.id = id;
-    this.price = price;
     this.name = name;
+    this.weight = weight;
+    this.price = price;
   }
 }

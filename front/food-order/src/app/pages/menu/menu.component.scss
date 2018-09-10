@@ -1,0 +1,23 @@
+.menu-component {
+  padding: 10px;
+
+  .update-button {
+    margin-left: 30px;
+  }
+
+  table {
+    width: 100%;
+
+    .mat-column-weight {
+      width: 100px;
+    }
+
+    .mat-column-price {
+      width: 100px;
+    }
+  }
+
+  .category {
+    margin-bottom: 20px;
+  }
+}
