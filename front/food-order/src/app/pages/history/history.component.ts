@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {AngularFireDatabase} from "angularfire2/database";
 import {GroupOrder} from "../../model/group-order";
 import {UserGroup} from "../../model/user-group";
+import {User} from "firebase";
+import {AngularFireAuth} from "angularfire2/auth";
 
 @Component({
   selector: 'app-history',
@@ -15,13 +17,31 @@ export class HistoryComponent implements OnInit {
     order: GroupOrder
   }[] = [];
   users: UserGroup;
+  activeUser: User;
 
-  constructor(private fireDb: AngularFireDatabase) {
+  constructor(private fireDb: AngularFireDatabase, private fireAuth: AngularFireAuth) {
+    fireAuth.authState.subscribe(user => {
+      if (user) {
+        this.activeUser = user;
+        this.loadHistory();
+      } else {
+        this.activeUser = null;
+        this.history = [];
+      }
+    });
+
+
+  }
+
+  ngOnInit() {
+  }
+
+  private loadHistory() {
     this.fireDb.database.ref("/users").once("value", (snapshot) => {
       this.users = snapshot.val();
     });
 
-    fireDb.database.ref("/orders").limitToLast(20).once("value", (snapshot) => {
+    this.fireDb.database.ref("/orders").limitToLast(20).once("value", (snapshot) => {
       let data = snapshot.val();
       console.log(data);
 
@@ -41,10 +61,7 @@ export class HistoryComponent implements OnInit {
 
         this.history = history;
       }
-    })
-  }
-
-  ngOnInit() {
+    });
   }
 
 }
