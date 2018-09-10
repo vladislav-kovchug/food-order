@@ -5,42 +5,46 @@
 
   <div *ngIf="activeUser" class="order-content">
     <div class="table-holder">
-      <table mat-table [dataSource]="foodItems" class="mat-elevation-z8">
-        <!-- Item Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Name</th>
-          <td mat-cell *matCellDef="let item"> {{item.name}}</td>
-          <td mat-footer-cell *matFooterCellDef> Total</td>
-        </ng-container>
+      <div class="category" *ngFor="let category of menu">
+        <div>{{category.name}}</div>
+        <table mat-table [dataSource]="category.items"  class="mat-elevation-z8">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name</th>
+            <td mat-cell *matCellDef="let item">{{item.name}}</td>
+          </ng-container>
 
-        <!-- Cost Column -->
-        <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef> Price</th>
-          <td mat-cell *matCellDef="let item"> {{item.price | currency}}</td>
-          <td mat-footer-cell *matFooterCellDef> {{getTotalCost() | currency}}</td>
-        </ng-container>
+          <ng-container matColumnDef="weight">
+            <th mat-header-cell *matHeaderCellDef>Weight(g)</th>
+            <td mat-cell *matCellDef="let item">{{item.weight}}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="order">
-          <th mat-header-cell *matHeaderCellDef> Order</th>
-          <td mat-cell *matCellDef="let item">
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price(UAH)</th>
+            <td mat-cell *matCellDef="let item">{{item.price}}</td>
+          </ng-container>
 
-            <div class="order-counter">
-              <button [disabled]="isMyOrderFinished() || item.count == 0" mat-mini-fab (click)="decrement(item)"><span
-                class="button-content">-</span></button>
-              <mat-form-field class="counter-form">
-                <input class="counter-input" readonly type="number" matInput placeholder="Count" [value]="item.count">
-              </mat-form-field>
-              <button [disabled]="isMyOrderFinished()" mat-mini-fab (click)="increment(item)"><span
-                class="button-content">+</span></button>
-            </div>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
-        </ng-container>
+          <ng-container matColumnDef="order">
+            <th mat-header-cell *matHeaderCellDef>Count</th>
+            <td mat-cell *matCellDef="let item">
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true;"></tr>
-      </table>
+              <div class="order-counter">
+                <button [disabled]="isMyOrderFinished() || getMenuItemOrdersCount(item) == 0" mat-mini-fab (click)="decrement(item)"><span
+                  class="button-content">-</span></button>
+                <mat-form-field class="counter-form">
+                  <input class="counter-input" readonly type="number" matInput placeholder="Count" [value]="getMenuItemOrdersCount(item)">
+                </mat-form-field>
+                <button [disabled]="isMyOrderFinished()" mat-mini-fab (click)="increment(item)"><span
+                  class="button-content">+</span></button>
+              </div>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+      </div>
 
       <div class="order-toolbar">
         <mat-form-field class="comment-field">

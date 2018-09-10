@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material";
 import {ProceedOrderDialogData} from "./proceed-order-dialog-data";
 import {UserData} from "../../../model/user-data";
-import {FoodItem} from "../../../model/food-item";
+import {OrderItem} from "../../../model/order-item";
 
 @Component({
   selector: 'app-proceed-order',
@@ -12,7 +12,7 @@ import {FoodItem} from "../../../model/food-item";
 export class ProceedOrderComponent implements OnInit {
   orders: {
     user: UserData,
-    items: FoodItem[],
+    items: OrderItem[],
     totalCost: number,
     comments: string
   }[] = [];
@@ -21,12 +21,12 @@ export class ProceedOrderComponent implements OnInit {
     Object.keys(this.dialogData.activeOrder).forEach((key) => {
       let user = this.dialogData.users[key];
       let comments = this.dialogData.activeOrder[key].comments;
-      let items: FoodItem[] = [];
+      let items: OrderItem[] = [];
       let totalCost = 0;
       Object.keys(this.dialogData.activeOrder[key].items).forEach((itemKey) => {
-        let foodItem = this.dialogData.activeOrder[key].items[itemKey];
-        totalCost += foodItem.price;
-        items.push(foodItem);
+        let orderItem = this.dialogData.activeOrder[key].items[itemKey];
+        totalCost += orderItem.price;
+        items.push(orderItem);
       });
 
       this.orders.push({

@@ -26,6 +26,11 @@
     overflow: auto;
     display: inline-block;
 
+    .category {
+      padding: 0 8px;
+      margin-bottom: 15px;
+    }
+
     table {
       width: 100%;
       height: 200px;
@@ -35,6 +40,10 @@
       }
 
       .mat-column-price {
+        width: 131px;
+      }
+
+      .mat-column-weight {
         width: 131px;
       }
     }

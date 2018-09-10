@@ -1,5 +1,4 @@
 import {ApplicationRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FoodItem} from "../../model/food-item";
 import {AngularFireDatabase} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {Subscription} from "rxjs/Subscription";
@@ -8,8 +7,10 @@ import {Order} from "../../model/order";
 import {MatDialog} from "@angular/material";
 import {ProceedOrderComponent} from "./proceed-order/proceed-order.component";
 import {UserData} from "../../model/user-data";
+import {Promise} from "q";
+import {MenuCategory} from "../../model/menu-category";
+import {MenuItem} from "../../model/menu-item";
 import Reference = firebase.database.Reference;
-import {ProceedOrderDialogData} from "./proceed-order/proceed-order-dialog-data";
 
 @Component({
   selector: 'app-order',
@@ -18,8 +19,8 @@ import {ProceedOrderDialogData} from "./proceed-order/proceed-order-dialog-data"
 })
 export class OrderComponent implements OnInit, OnDestroy {
   activeUser: User;
-  displayedColumns: string[] = ['name', 'price', 'order'];
-  foodItems: FoodItem[] = [];
+  displayedColumns: string[] = ['name', 'weight', 'price', 'order'];
+  menu: MenuCategory<MenuItem>[] = [];
   subscriptions: Subscription[] = [];
   activeOrder: { [userId: string]: Order } = {};
   users: { [userId: string]: UserData } = {};
@@ -27,11 +28,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   constructor(private firedb: AngularFireDatabase, private fireAuth: AngularFireAuth, private dialog: MatDialog,
               private applicationRef: ApplicationRef) {
-    for (let i = 1; i < 20; i++) {
-      let foodItem = new FoodItem(100 + i, 0.4 * i, "Item " + i, 0);
-      this.foodItems.push(foodItem);
-    }
-
     this.subscriptions.push(this.fireAuth.authState.subscribe(user => {
       if (user) {
         this.activeUser = user;
@@ -53,24 +49,30 @@ export class OrderComponent implements OnInit, OnDestroy {
     });
   }
 
-  public getTotalCost() {
-    return this.foodItems.map(item => item.price * item.count)
-      .reduce((acc, value) => acc + value, 0);
+  public increment(item: MenuItem) {
+    let count = this.getMenuItemOrdersCount(item);
+    this.updateActiveOrder(item, count + 1);
   }
 
-  public increment(item: FoodItem) {
-    let isNewItem = item.count === 0;
-    item.count++;
-    this.updateActiveOrder(item, isNewItem);
-  }
-
-  public decrement(item: FoodItem) {
-    if (item.count === 0) {
+  public decrement(item: MenuItem) {
+    let count = this.getMenuItemOrdersCount(item);
+    if (count === 0) {
       return;
     }
+    this.updateActiveOrder(item, count - 1);
+  }
 
-    item.count--;
-    this.updateActiveOrder(item);
+  public getMenuItemOrdersCount(item: MenuItem) {
+    let myOrder = this.activeOrder[this.activeUser.uid];
+    if (!myOrder) {
+      return 0;
+    }
+    let orderItem = myOrder.items[item.id];
+    if (!orderItem) {
+      return 0;
+    }
+
+    return orderItem.count;
   }
 
   public finishOrder() {
@@ -110,17 +112,19 @@ export class OrderComponent implements OnInit, OnDestroy {
     return Object.keys(object);
   }
 
-  private updateActiveOrder(item: FoodItem, isNewItem: boolean = false) {
-    if (item.count > 0) {
+  private updateActiveOrder(item: MenuItem, newCount: number) {
+    let count = this.getMenuItemOrdersCount(item);
+    let isNewItem = count === 0;
+
+    if (newCount > 0) {
       if (isNewItem) {
         this.getActiveOrderRef().child("/" + this.activeUser.uid + "/items/" + item.id).set({
-          count: item.count,
+          count: newCount,
           name: item.name,
           price: item.price
         });
-        return;
       } else {
-        this.getActiveOrderRef().child("/" + this.activeUser.uid + "/items/" + item.id + "/count").set(item.count);
+        this.getActiveOrderRef().child("/" + this.activeUser.uid + "/items/" + item.id + "/count").set(newCount);
       }
     } else {
       this.getActiveOrderRef().child("/" + this.activeUser.uid + "/items/" + item.id).remove();
@@ -132,28 +136,14 @@ export class OrderComponent implements OnInit, OnDestroy {
       this.users = snapshot.val();
     });
 
-    this.getActiveOrderRef().once("value", (snapshot) => {
-      let activeOrder = snapshot.val();
-      if (!activeOrder) {
+    this.loadMenu().then(() => {
+      this.getActiveOrderRef().once("value", (snapshot) => {
+        let activeOrder = snapshot.val();
+        if (activeOrder) {
+          this.activeOrder = activeOrder;
+        }
         this.applicationRef.tick();
-        return;
-      }
-
-      this.activeOrder = activeOrder;
-
-      let myOrder = this.activeOrder[this.activeUser.uid];
-      if (myOrder) {
-        Object.keys(myOrder.items).forEach((orderId) => {
-          let currentFoodItem = this.foodItems.find((item) => {
-            return item.id === parseInt(orderId);
-          });
-
-          if (currentFoodItem) {
-            currentFoodItem.count = myOrder.items[orderId].count;
-          }
-        });
-      }
-      this.applicationRef.tick();
+      });
     });
 
     this.getActiveOrderRef().on("child_changed", (snapshot) => {
@@ -175,6 +165,19 @@ export class OrderComponent implements OnInit, OnDestroy {
       this.applicationRef.tick();
     });
 
+  }
+
+  private loadMenu(): Promise<void> {
+    return Promise<void>((resolve) => {
+      this.firedb.database.ref("/menu").once("value", (snapshot) => {
+        let menu = snapshot.val();
+        console.log("Menu: ", menu);
+        if (menu) {
+          this.menu = menu;
+          resolve(null);
+        }
+      })
+    });
   }
 
   private getActiveOrderRef(): Reference {
