@@ -14,7 +14,10 @@
     </span>
   </div>
   <div class="component-item">
-    <img class="user-image" *ngIf="user && user.photoURL" src="{{user.photoURL}}">
+    <img [matMenuTriggerFor]="menu" class="user-image" *ngIf="user && user.photoURL" src="{{user.photoURL}}">
   </div>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="signOut()">Sign Out</button>
+  </mat-menu>
 
 </div>
