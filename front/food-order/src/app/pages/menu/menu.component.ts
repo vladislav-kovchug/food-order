@@ -4,6 +4,7 @@ import {AngularFireDatabase} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {MenuItem} from "../../model/menu-item";
 import {MenuCategory} from "../../model/menu-category";
+import csv from "csvtojson";
 
 @Component({
   selector: 'app-menu',
@@ -46,47 +47,69 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   private handleFileUploaded(content: string) {
-    console.log(content);
-    let categories = this.parseMenuFromCsv(content);
+    this.parseMenuFromCsv(content).then((categories) => {
+      let menu = [];
+      let idCounter = 1;
+      Object.keys(categories).forEach(key => {
+        let items = categories[key];
+        let menuItems = items.map((item) => {
+          let weight = parseFloat(item[1].replace(/,/g, ".")) * 1000; // in gramms
+          let price = parseFloat(item[2].replace(/-/g, "."));
+          return new MenuItem(idCounter++, item[0], weight, price)
+        });
 
-    let menu = [];
-    let idCounter = 1;
-    Object.keys(categories).forEach(key => {
-      let items = categories[key];
-      let menuItems = items.map((item) => {
-        let weight = parseFloat(item[1].replace(/,/g, ".")) * 1000; // in gramms
-        let price = parseFloat(item[2].replace(/-/g, "."));
-        return new MenuItem(idCounter++, item[0], weight, price)
+        if (menuItems.length) {
+          menu.push(new MenuCategory(key, menuItems));
+        }
       });
-
-      if (menuItems.length) {
-        menu.push(new MenuCategory(key, menuItems));
-      }
+      console.log(menu);
+      this.menu = menu;
     });
-    console.log(menu);
-    this.menu = menu;
   }
 
-  private parseMenuFromCsv(content: string) {
-    let lines = content.split("\n");
+  private parseMenuFromCsv(content: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      let records = [];
+      csv({
+        noheader: true,
+        trim: true,
+      }).fromString(content)
+        .subscribe((data, lineNumber) => {
+          records.push(data);
+        }, (err) => {
+          console.error(err);
+          reject(err);
+        }, () => {
 
+          resolve(this.getCategories(records));
+        });
+    });
+  }
+
+  private getCategories(records: [any]) {
     let categories = {};
     let lastCategory = "";
-    lines.forEach((line, index) => {
-      if (index < 3) {
-        return; // skip first three
+    records.forEach((line, index) => {
+      if (index < 5) {
+        return; // skip first 5
       }
-      let columns = this.splitScvLine(line);
-      console.log(columns);
-      if (!columns[0].trim() && !columns[1].trim() && !columns[2].trim()) {
+      let columns = [
+        MenuComponent.cleanString(line.field1),
+        MenuComponent.cleanString(line.field2),
+        MenuComponent.cleanString(line.field3)
+      ];
+
+      console.log(index, columns);
+
+      if (!columns[0]) {
         return; // skip empty lines
       }
 
-      if (columns[0] && !columns[1].trim() && !columns[2].trim()) {
+      if (columns[0] && !columns[1] && !columns[2]) {
         lastCategory = columns[0];
         categories[lastCategory] = [];
-      } else {
-        // console.log(columns);
+      }
+      else {
         categories[lastCategory].push(columns);
       }
     });
@@ -112,6 +135,12 @@ export class MenuComponent implements OnInit, AfterViewInit {
     }
     results.push(this.normalizeString(activeLine));
     return results;
+  }
+
+  private static cleanString(str: string) {
+    let result = str.trim();
+    result = result.replace(/\n/g, " ");
+    return result.trim();
   }
 
   private normalizeString(str: string) {
