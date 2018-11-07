@@ -4,7 +4,7 @@ import {AngularFireDatabase} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {MenuItem} from "../../model/menu-item";
 import {MenuCategory} from "../../model/menu-category";
-import csv from "csvtojson";
+import * as csv from "csvtojson";
 
 @Component({
   selector: 'app-menu',
@@ -86,7 +86,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private getCategories(records: [any]) {
+  private getCategories(records: any[]) {
     let categories = {};
     let lastCategory = "";
     records.forEach((line, index) => {
