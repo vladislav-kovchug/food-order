@@ -4,7 +4,7 @@
     ".read": "auth!=null",
     "users": {
       "$uid": {
-        ".write": "$uid === auth.uid && !newData.hasChild('moderator')",
+        ".write": "$uid === auth.uid && !newData.hasChild('moderator')"
         // "$field": {
         //   ".write": true,
         //   // ".write": "$uid === auth.uid && $field !== 'moderator'",
@@ -13,8 +13,13 @@
     },
     "orders": {
       "$date": {
-        "$uid": {
-          ".write": "$uid === auth.uid"
+        "timestamp": {
+          ".write": true
+        },
+        "items": {
+          "$uid": {
+            ".write": "$uid === auth.uid"
+          }
         }
       }
     },

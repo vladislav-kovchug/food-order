@@ -10,7 +10,6 @@ import {MenuCategory} from "../../model/menu-category";
 import {MenuItem} from "../../model/menu-item";
 import {GroupOrder} from "../../model/group-order";
 import {UserGroup} from "../../model/user-group";
-import Reference = firebase.database.Reference;
 
 @Component({
   selector: 'app-order',
@@ -77,7 +76,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   public finishOrder() {
     if (this.activeUser && this.activeOrder[this.activeUser.uid]) {
-      this.getActiveOrderRef().child("/" + this.activeUser.uid).update({
+      this.getActiveOrderItemsRef().child("/" + this.activeUser.uid).update({
         finished: true,
         comments: this.orderComments || null,
       });
@@ -87,7 +86,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public cancelOrder() {
-    this.getActiveOrderRef().child("/" + this.activeUser.uid).remove();
+    this.getActiveOrderItemsRef().child("/" + this.activeUser.uid).remove();
   }
 
   public isMyOrderFinished() {
@@ -122,16 +121,16 @@ export class OrderComponent implements OnInit, OnDestroy {
 
     if (newCount > 0) {
       if (isNewItem) {
-        this.getActiveOrderRef().child("/" + this.activeUser.uid + "/items/" + item.id).set({
+        this.getActiveOrderItemsRef().child("/" + this.activeUser.uid + "/items/" + item.id).set({
           count: newCount,
           name: item.name,
           price: item.price
         });
       } else {
-        this.getActiveOrderRef().child("/" + this.activeUser.uid + "/items/" + item.id + "/count").set(newCount);
+        this.getActiveOrderItemsRef().child("/" + this.activeUser.uid + "/items/" + item.id + "/count").set(newCount);
       }
     } else {
-      this.getActiveOrderRef().child("/" + this.activeUser.uid + "/items/" + item.id).remove();
+      this.getActiveOrderItemsRef().child("/" + this.activeUser.uid + "/items/" + item.id).remove();
     }
   }
 
@@ -143,27 +142,33 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.loadMenu().then(() => {
       this.getActiveOrderRef().once("value", (snapshot) => {
         let activeOrder = snapshot.val();
-        if (activeOrder) {
-          this.activeOrder = activeOrder;
+        console.log(activeOrder);
+        if (activeOrder && activeOrder.items) {
+          this.activeOrder = activeOrder.items;
+        }
+
+        if (!activeOrder || !activeOrder.timestamp) {
+          let todayTimestamp = new Date(OrderComponent.getTodayOrderDate()).getTime();
+          this.getActiveOrderRef().child("timestamp").set(todayTimestamp)
         }
         this.applicationRef.tick();
       });
     });
 
-    this.getActiveOrderRef().on("child_changed", (snapshot) => {
+    this.getActiveOrderItemsRef().on("child_changed", (snapshot) => {
       console.log("Order for user updated: " + snapshot.key);
       console.log("Order value: ", snapshot.val());
       this.activeOrder[snapshot.key] = snapshot.val();
       this.applicationRef.tick();
     });
 
-    this.getActiveOrderRef().on("child_removed", (snapshot) => {
+    this.getActiveOrderItemsRef().on("child_removed", (snapshot) => {
       console.log("Order for user removed: " + snapshot.key);
       delete this.activeOrder[snapshot.key];
       this.applicationRef.tick();
     });
 
-    this.getActiveOrderRef().on("child_added", (snapshot) => {
+    this.getActiveOrderItemsRef().on("child_added", (snapshot) => {
       console.log("Order for user added: " + snapshot.key);
       this.activeOrder[snapshot.key] = snapshot.val();
       this.applicationRef.tick();
@@ -184,8 +189,12 @@ export class OrderComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getActiveOrderRef(): Reference {
+  private getActiveOrderRef(): firebase.database.Reference {
     return this.firedb.database.ref("/orders/" + OrderComponent.getTodayOrderDate());
+  }
+
+  private getActiveOrderItemsRef(): firebase.database.Reference {
+    return this.getActiveOrderRef().child("items");
   }
 
   private static getTodayOrderDate(): string {

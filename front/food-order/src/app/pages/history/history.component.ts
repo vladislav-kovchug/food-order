@@ -29,8 +29,6 @@ export class HistoryComponent implements OnInit {
         this.history = [];
       }
     });
-
-
   }
 
   ngOnInit() {
@@ -41,27 +39,34 @@ export class HistoryComponent implements OnInit {
       this.users = snapshot.val();
     });
 
-    this.fireDb.database.ref("/orders").limitToLast(20).once("value", (snapshot) => {
-      let data = snapshot.val();
-      console.log(data);
+    this.fireDb.database.ref("/orders")
+      .orderByChild("timestamp")
+      .limitToLast(20)
+      .once("value", (snapshot) => {
+        let orders = snapshot.val();
+        // console.log(orders);
 
-      if (data) {
-        let history = [];
-        Object.keys(data).forEach((date) => {
-          history.push({
-            date: new Date(date),
-            ordersCount: Object.keys(data[date]).length,
-            order: data[date]
-          })
-        });
+        if (orders) {
+          let history = [];
+          Object.keys(orders).forEach((date) => {
+            let orderItems = orders[date].items;
+            if (!orderItems) {
+              return;
+            }
+            history.push({
+              date: new Date(orders[date].timestamp),
+              ordersCount: Object.keys(orderItems).length,
+              order: orderItems
+            });
+          });
 
-        history.sort((a, b) => {
-          return b.date - a.date;
-        });
+          history.sort((a, b) => {
+            return b.date - a.date;
+          });
 
-        this.history = history;
-      }
-    });
+          this.history = history;
+        }
+      });
   }
 
 }
