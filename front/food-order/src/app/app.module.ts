@@ -22,7 +22,7 @@ import {
 import {RouterModule, Routes} from '@angular/router';
 import {OrderComponent} from './pages/order/order.component';
 import {HistoryComponent} from './pages/history/history.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AngularFireModule} from "angularfire2";
 import {environment} from "../environments/environment";
 import {AngularFireDatabaseModule} from "angularfire2/database";
@@ -85,6 +85,7 @@ export function getAuthServiceConfigs() {
     MatInputModule,
     MatSlideToggleModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule, // for database,

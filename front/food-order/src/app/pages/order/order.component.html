@@ -48,16 +48,15 @@
 
       <div class="order-toolbar">
         <mat-form-field class="comment-field">
-          <textarea [disabled]="isMyOrderFinished()" [(ngModel)]="orderComments" matInput
-                    placeholder="Leave a comment"></textarea>
+          <textarea matInput [formControl]="orderComments" placeholder="Leave a comment"></textarea>
         </mat-form-field>
 
-        <button [disabled]="isMyOrderFinished() || !hasItemsInMyOrder()" class="toolbar-btn" mat-raised-button
-                color="primary" (click)="finishOrder()">Finish My Order
+        <button [disabled]="!hasItemsInMyOrder()" class="toolbar-btn" mat-raised-button
+                color="primary" (click)="toggleOrderState()">{{ isMyOrderFinished() ? "Re-Open My Order" : "Finish My Order" }}
         </button>
 
         <button [disabled]="isMyOrderFinished() || !hasItemsInMyOrder()" class="toolbar-btn" mat-raised-button
-                color="warn" (click)="cancelOrder()">Cancel My Order
+                color="warn" (click)="clearOrder()">Clear My Order
         </button>
 
         <button class="toolbar-btn group-order-btn" mat-raised-button color="primary" (click)="showProceedDialog()">Proceed Group Order

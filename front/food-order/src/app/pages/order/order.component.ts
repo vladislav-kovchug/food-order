@@ -10,6 +10,7 @@ import {MenuCategory} from "../../model/menu-category";
 import {MenuItem} from "../../model/menu-item";
 import {GroupOrder} from "../../model/group-order";
 import {UserGroup} from "../../model/user-group";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-order',
@@ -23,7 +24,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   activeOrder: GroupOrder = {};
   users: UserGroup = {};
-  orderComments: string;
+  orderComments: FormControl = new FormControl('');
 
   constructor(private firedb: AngularFireDatabase, private fireAuth: AngularFireAuth, private dialog: MatDialog,
               private applicationRef: ApplicationRef) {
@@ -74,18 +75,20 @@ export class OrderComponent implements OnInit, OnDestroy {
     return orderItem.count;
   }
 
-  public finishOrder() {
+  public toggleOrderState() {
     if (this.activeUser && this.activeOrder[this.activeUser.uid]) {
+      let isOrderFinished = !this.activeOrder[this.activeUser.uid].finished;
       this.getActiveOrderItemsRef().child("/" + this.activeUser.uid).update({
-        finished: true,
-        comments: this.orderComments || null,
+        finished: isOrderFinished,
+        comments: this.orderComments.value || null,
       });
-      this.activeOrder[this.activeUser.uid].finished = true;
-      this.activeOrder[this.activeUser.uid].comments = this.orderComments;
+      this.activeOrder[this.activeUser.uid].finished = isOrderFinished;
+      this.activeOrder[this.activeUser.uid].comments = this.orderComments.value;
+      isOrderFinished ? this.orderComments.disable() : this.orderComments.enable();
     }
   }
 
-  public cancelOrder() {
+  public clearOrder() {
     this.getActiveOrderItemsRef().child("/" + this.activeUser.uid).remove();
   }
 
@@ -145,6 +148,11 @@ export class OrderComponent implements OnInit, OnDestroy {
         console.log(activeOrder);
         if (activeOrder && activeOrder.items) {
           this.activeOrder = activeOrder.items;
+          let myOrder = this.activeOrder[this.activeUser.uid];
+          if (myOrder) {
+            this.orderComments.setValue(myOrder.comments);
+            myOrder.finished ? this.orderComments.disable() : this.orderComments.enable();
+          }
         }
 
         if (!activeOrder || !activeOrder.timestamp) {
