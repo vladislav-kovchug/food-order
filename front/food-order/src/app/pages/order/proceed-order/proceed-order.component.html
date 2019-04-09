@@ -2,10 +2,8 @@
   <h2 mat-dialog-title>Proceed Order</h2>
   <mat-dialog-content>
     <div>Phone to: +38(097)-566-02-24</div>
-    <div>Total: {{totalCost}}</div>
-    <app-order-view [order]="dialogData.activeOrder"
-                    [users]="dialogData.users"
-    ></app-order-view>
+
+    <app-order-view [order]="dialogData.activeOrder" [users]="dialogData.users"></app-order-view>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close>Ok</button>
