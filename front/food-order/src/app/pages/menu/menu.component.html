@@ -3,13 +3,11 @@
     Please SignIn to view a menu.
   </div>
   <div [hidden]="!activeUser" class="header">
-    <div>Menu version: since <span>{{menuUpdateTimestamp | date}}</span></div>
+    <div [hidden]="!menuUpdateTimestamp">Menu from <strong>{{menuUpdateTimestamp | date: "medium"}}</strong></div>
 
-    <div *ngIf="updating" class="loader">updating...</div>
-
-    <button [disabled]="!menu.length"
-            mat-raised-button
+    <button [disabled]="!menu.length || updating"
             class="update-button"
+            mat-raised-button
             color="primary"
             (click)="updateMenu()">
       UPDATE MENU

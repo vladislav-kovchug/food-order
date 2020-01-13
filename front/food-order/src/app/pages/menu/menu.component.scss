@@ -14,16 +14,16 @@
   }
 
   .category {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   .header {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 
-    .loader {
-      margin: 0 8px 0 auto;
+    .update-button {
+      margin-left: auto;
     }
   }
 }

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatSnackBar } from "@angular/material";
 import { AngularFireFunctions } from "angularfire2/functions";
 import { User } from "firebase";
 import { AngularFireDatabase } from "angularfire2/database";
@@ -24,7 +25,8 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   constructor(fireAuth: AngularFireAuth,
               private fireDb: AngularFireDatabase,
-              private fireFunc: AngularFireFunctions) {
+              private fireFunc: AngularFireFunctions,
+              private snackbar: MatSnackBar) {
     fireAuth.authState.subscribe(user => {
       if (user) {
         this.activeUser = user;
@@ -41,13 +43,16 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   updateMenu() {
     this.updating = true;
+    this.snackbar.open("Updating menu...", "close");
 
     this.fireFunc.httpsCallable("loadMenu")(null)
       .subscribe(() => {
         this.readMenu();
         this.updating = false;
+        this.snackbar.open("Menu updated", null,{duration: 2000});
       }, () => {
         this.updating = false;
+        this.snackbar.open("Failed to update menu", null,{duration: 2000});
       });
   }
 
