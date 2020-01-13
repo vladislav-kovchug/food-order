@@ -3,7 +3,7 @@
     Please SignIn to view a menu.
   </div>
   <div [hidden]="!activeUser" class="header">
-    <div [hidden]="!menuUpdateTimestamp">Menu from <strong>{{menuUpdateTimestamp | date: "medium"}}</strong></div>
+    <div [hidden]="!menuUpdateTimestamp">Menu since <strong>{{menuUpdateTimestamp | date: "medium"}}</strong></div>
 
     <button [disabled]="!menu.length || updating"
             class="update-button"
