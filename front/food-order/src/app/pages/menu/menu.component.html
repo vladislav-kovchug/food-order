@@ -2,15 +2,24 @@
   <div *ngIf="!activeUser">
     Please SignIn to view a menu.
   </div>
-  <div [hidden]="!activeUser">
-    <input #fileUploadInput id="fileUploadInput" type="file">
-    <button [disabled]="!menu.length" class="update-button" mat-raised-button color="primary" (click)="updateMenu()">Save New Menu</button>
+  <div [hidden]="!activeUser" class="header">
+    <div>Menu version: since <span>{{menuUpdateTimestamp | date}}</span></div>
+
+    <div *ngIf="updating" class="loader">updating...</div>
+
+    <button [disabled]="!menu.length"
+            mat-raised-button
+            class="update-button"
+            color="primary"
+            (click)="updateMenu()">
+      UPDATE MENU
+    </button>
   </div>
 
   <div *ngIf="activeUser">
     <div class="category" *ngFor="let category of menu">
       <div>{{category.name}}</div>
-      <table mat-table [dataSource]="category.items"  class="mat-elevation-z8">
+      <table mat-table [dataSource]="category.items"  class="mat-elevation-z2">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Name</th>
           <td mat-cell *matCellDef="let item">{{item.name}}</td>

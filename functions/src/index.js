@@ -10,10 +10,11 @@ const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
 const MENU_PATH = "/menu";
 const MENU_UPDATE_TIMESTAMP_PATH = "/menuUpdateTimestamp";
 
-// Every Monday at 11:00AM
-exports.loadMenu = functions.pubsub.schedule("00 11 * * mon")
+/*// Every Monday at 11:00AM
+exports.loadMenu = functions.pubsub.schedule("*!/5 * * * *")
     .timeZone("Europe/Kiev")
-    .onRun(async context => {
+    .onRun(async context => {*/
+exports.loadMenu = functions.https.onCall(async (data, context) => {
         const auth = await google.auth.getClient({scopes: SCOPES});
         const sheetsApi = google.sheets({version: "v4", auth});
 
@@ -21,7 +22,6 @@ exports.loadMenu = functions.pubsub.schedule("00 11 * * mon")
         if (!sheetIdResult || !sheetIdResult.val) {
             const message = `Failed to retrieve sheet id from Firebase`;
             console.error(message);
-            return;
         }
 
         const sheetId = sheetIdResult.val();
@@ -30,7 +30,6 @@ exports.loadMenu = functions.pubsub.schedule("00 11 * * mon")
         if (!sheetResult || !sheetResult.data || !sheetResult.data.values) {
             const message = `Failed to read data from sheet ${sheetId}`;
             console.error(message);
-            return;
         }
 
         console.info(`Creating menu...`);

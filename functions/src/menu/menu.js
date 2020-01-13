@@ -26,8 +26,8 @@ exports.createMenu = function createMenu(values = []) {
         menu[category].push({
             id: id++,
             name: cleanString(row[0]),
-            weight: cleanString(row[1]),
-            price: cleanString(row[2]),
+            weight: parseWeight(cleanString(row[1])),
+            price: parsePrice(cleanString(row[2])),
         });
     }
 
@@ -67,6 +67,23 @@ function isWeightString(value) {
     return weightRegExp.test(value) || Number.parseInt(value) > 0;
 }
 
+function parseWeight(value) {
+    if (!value) {
+        throw Error("Weight cannot be empty");
+    }
+
+    const weight = Number.parseFloat(value.replace(",", "."));
+
+    if (!Number.isFinite(weight)) {
+        throw Error(`Failed to parse weight ${weight}`);
+    }
+
+    // In case weight less than 1 convert kilos to grams.
+    return weight < 1
+        ? weight * 1000
+        : weight;
+}
+
 function isPriceString(value) {
     if (!value) {
         return false;
@@ -75,6 +92,20 @@ function isPriceString(value) {
     const priceRegExp = /^\d{1-4}/;
 
     return priceRegExp.test(value) || Number.parseInt(value) > 0;
+}
+
+function parsePrice(value) {
+    if (!value) {
+        throw Error("Price cannot be empty");
+    }
+
+    const price = Number.parseFloat(value.replace("/[\-,]/", "."));
+
+    if (!Number.isFinite(price)) {
+        throw Error(`Failed to parse price ${price}`);
+    }
+
+    return price;
 }
 
 function cleanString(value) {
