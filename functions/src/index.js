@@ -8,7 +8,7 @@ admin.initializeApp();
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
 
 const MENU_PATH = "/menu";
-const MENU_UPDATE_TIMESTAMP_PATH = "/menu_update_timestamp";
+const MENU_UPDATE_TIMESTAMP_PATH = "/menuUpdateTimestamp";
 
 exports.loadMenu = functions.https.onRequest(async (req, res) => {
     const auth = await google.auth.getClient({scopes: SCOPES});
