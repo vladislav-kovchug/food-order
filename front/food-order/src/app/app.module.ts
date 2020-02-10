@@ -14,7 +14,9 @@ import {
   MatListModule,
   MatMenuModule,
   MatPaginatorModule,
-  MatSidenavModule, MatSlideToggle, MatSlideToggleModule,
+  MatSidenavModule,
+  MatSlideToggleModule,
+  MatSnackBarModule,
   MatSortModule,
   MatTableModule,
   MatToolbarModule
@@ -34,6 +36,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { ProceedOrderComponent } from './pages/order/proceed-order/proceed-order.component';
 import { MenuComponent } from './pages/menu/menu.component';
 import { OrderViewComponent } from './order-view/order-view.component';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 const appRoutes: Routes = [
   { path: 'new-order', component: OrderComponent },
@@ -84,12 +87,14 @@ export function getAuthServiceConfigs() {
     MatSortModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule, // for database,
     AngularFireAuthModule,
+    AngularFireFunctionsModule,
     SocialLoginModule,
     MatDialogModule,
     MatExpansionModule

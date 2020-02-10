@@ -1,9 +1,11 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {User} from "firebase";
-import {AngularFireDatabase} from "angularfire2/database";
-import {AngularFireAuth} from "angularfire2/auth";
-import {MenuItem} from "../../model/menu-item";
-import {MenuCategory} from "../../model/menu-category";
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatSnackBar } from "@angular/material";
+import { AngularFireFunctions } from "angularfire2/functions";
+import { User } from "firebase";
+import { AngularFireDatabase } from "angularfire2/database";
+import { AngularFireAuth } from "angularfire2/auth";
+import { MenuItem } from "../../model/menu-item";
+import { MenuCategory } from "../../model/menu-category";
 import * as csv from "csvtojson";
 
 @Component({
@@ -18,9 +20,13 @@ export class MenuComponent implements OnInit, AfterViewInit {
   activeUser: User;
   menu: MenuCategory[] = [];
   displayedColumns: string[] = ['name', 'weight', 'price'];
+  menuUpdateTimestamp: number;
+  updating: boolean = false;
 
-
-  constructor(fireAuth: AngularFireAuth, private fireDb: AngularFireDatabase) {
+  constructor(fireAuth: AngularFireAuth,
+              private fireDb: AngularFireDatabase,
+              private fireFunc: AngularFireFunctions,
+              private snackbar: MatSnackBar) {
     fireAuth.authState.subscribe(user => {
       if (user) {
         this.activeUser = user;
@@ -30,10 +36,24 @@ export class MenuComponent implements OnInit, AfterViewInit {
       }
     });
 
+    this.fireDb.database.ref("/menuUpdateTimestamp").on("value", snapshot => {
+      this.menuUpdateTimestamp = snapshot.val();
+    });
   }
 
   updateMenu() {
-    this.fireDb.database.ref("/menu").set(this.menu);
+    this.updating = true;
+    this.snackbar.open("Updating menu...", "close");
+
+    this.fireFunc.httpsCallable("loadMenu")(null)
+      .subscribe(() => {
+        this.readMenu();
+        this.updating = false;
+        this.snackbar.open("Menu updated", null,{duration: 2000});
+      }, () => {
+        this.updating = false;
+        this.snackbar.open("Failed to update menu", null,{duration: 2000});
+      });
   }
 
   private readMenu() {
@@ -108,8 +128,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       if (columns[0] && !columns[1] && !columns[2]) {
         lastCategory = columns[0];
         categories[lastCategory] = [];
-      }
-      else {
+      } else {
         categories[lastCategory].push(columns);
       }
     });

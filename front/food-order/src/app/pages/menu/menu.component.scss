@@ -1,9 +1,5 @@
 .menu-component {
-  padding: 10px;
-
-  .update-button {
-    margin-left: 30px;
-  }
+  padding: 24px;
 
   table {
     width: 100%;
@@ -18,6 +14,20 @@
   }
 
   .category {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
+
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .update-button {
+      margin-left: auto;
+    }
+  }
+}
+
+.cdk-column-weight, .cdk-column-price {
+  text-align: end;
 }
